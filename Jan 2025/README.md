@@ -1,7 +1,7 @@
 **Think you’ve got what it takes to pop shells and snag your ticket to... [RE//verse](https://re-verse.io/) and [Off-By-One](https://offbyone.sg/)?** 😏  
 
 ### 🔥 **Windows Exploitation Challenge** 🔥  
-1. Get **SYSTEM privileges** by exploiting a bug in the downloadable driver below. (pwn it!)
+1. Get **SYSTEM privileges** by exploiting a bug in the downloadable driver below. (Yes, pop calc!)
 2. Keep the OS alive and happy — **no BSODs, no excuses!**
 3. Your exploit **must work** on **Windows 11 24H2**.
 4. Submit your winning solutions(**exploit source code** and **writeup**) to info@starlabs.sg.
@@ -15,6 +15,8 @@
 **Ready to flex those skills?** Download the application [here](https://github.com/star-sg/challenges/raw/refs/heads/main/Jan%202025/MessageManager.zip)!
 
 The password to the zip file is "**gu_laoshi_ddw_kym**"
+
+On your marks, get set, hack! 😎
 
 sha256 of `MessageManager.sys` : **16b929c3531996e5c2110e47a3595b7c430fb865842a625398abc7273512da89**
 
