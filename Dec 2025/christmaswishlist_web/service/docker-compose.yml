@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  christmaswishlist:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - FLAG=HEX{s4nt4s_m4g1c_t3mpl4t3_l34k5_s3cr3ts}
+      - RUST_LOG=info
+    restart: unless-stopped

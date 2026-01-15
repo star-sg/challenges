@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Querying Flags</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, .1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #0ea5e9;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8">
+        <h1 class="text-3xl font-bold text-center text-cyan-400 mb-4">CTF Blog</h1>
+        <p class="text-center text-gray-400 mb-6">Click the search button to view our blogs!</p>
+
+        <div class="flex gap-4 mb-6">
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="flex-grow bg-gray-700 border border-gray-600 text-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent" 
+                placeholder="Search for articles (hint: try %' OR '1%'='1)"
+            >
+            <button 
+                id="searchButton" 
+                class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200"
+            >
+                Search
+            </button>
+        </div>
+        
+        <p class="text-center text-gray-400 mb-6">Can you explain why the hint gives you the output you see?</p>
+
+        <div id="results" class="bg-gray-900 rounded-lg p-4 min-h-[200px] border border-gray-700 overflow-auto">
+            <p class="text-gray-500">Search results will appear here...</p>
+        </div>
+
+        <div id="loading" class="hidden flex justify-center items-center mt-4">
+            <div class="spinner"></div>
+            <p class="ml-3 text-gray-400">Querying database...</p>
+        </div>
+
+        <div id="errorMessage" class="hidden text-red-400 bg-red-900/50 border border-red-700 rounded-lg p-3 mt-4 text-center">
+            An error occurred.
+        </div>
+
+        <div id="queryDisplay" class="mt-4 hidden">
+            <h4 class="text-gray-400 font-semibold mb-2">Executed SQL Query:</h4>
+            <pre class="bg-gray-900 text-yellow-300 p-3 rounded-lg border border-gray-700 text-sm overflow-x-auto"><code id="queryCode">Waiting for query...</code></pre>
+        </div>
+
+    </div>
+
+    <script>
+        const searchButton = document.getElementById('searchButton');
+        const searchInput = document.getElementById('searchInput');
+        const resultsDiv = document.getElementById('results');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('errorMessage');
+        const queryDisplayDiv = document.getElementById('queryDisplay'); 
+        const queryCode = document.getElementById('queryCode'); 
+
+        searchButton.addEventListener('click', handleSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+        async function handleSearch() {
+            const query = searchInput.value.trim();
+            
+            resultsDiv.innerHTML = '<p class="text-gray-500">Search results will appear here...</p>';
+            errorDiv.classList.add('hidden');
+            queryDisplayDiv.classList.add('hidden'); 
+            queryCode.textContent = ''; 
+            loadingDiv.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+
+                const data = await response.json();
+
+                if (data.executed_query) {
+                    queryCode.textContent = data.executed_query;
+                    queryDisplayDiv.classList.remove('hidden');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Unknown server error');
+                }
+
+                displayResults(data);
+
+            } catch (e) {
+                displayError(e.message);
+            } finally {
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        function displayResults(results) {
+            const { columns, rows } = results;
+
+            if (rows.length === 0) {
+                resultsDiv.innerHTML = '<p class="text-gray-500">No articles found.</p>';
+                return;
+            }
+
+            let html = '<table class="w-full text-left table-auto">';
+            
+            html += '<thead><tr class="bg-gray-700">';
+            columns.forEach(col => {
+                html += `<th class="px-4 py-2 text-cyan-300 capitalize">${col.replace('_', ' ')}</th>`;
+            });
+            html += '</tr></thead>';
+
+            html += '<tbody>';
+            rows.forEach((row, index) => {
+                html += `<tr class="border-b border-gray-700 ${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-800/50'}">`;
+                row.forEach(cell => {
+                    html += `<td class="px-4 py-2">${cell}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function displayError(message) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+    </script>
+</body>
+</html>

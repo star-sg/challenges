@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex XOR Bin</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Using Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for details/summary */
+        details > summary {
+            cursor: pointer;
+            font-weight: 500;
+            color: #93c5fd; /* blue-300 */
+        }
+        details[open] {
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <main class="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-2xl p-8 space-y-8">
+        <h1 class="text-4xl font-bold text-center text-blue-300 mb-6">The Crypto Challenge</h1>
+
+        <!-- Stage 1: Caesar Cipher -->
+        <section id="stage-1" class="space-y-4 p-6 bg-gray-800 rounded-lg border border-gray-700">
+            <h2 class="text-2xl font-semibold">Stage 1: The Shift</h2>
+            <p class="text-gray-300">Let's try decrypting some ciphers! Decrypt the following message, which was encrypted with a simple shift cipher.</p>
+            
+            <pre class="bg-gray-900 p-4 rounded-lg text-center text-lg font-mono text-yellow-300">Unfbehu jxu ejxuh efjyedi yd jxu muriyjui qi mubb!</pre>
+            
+            <details class="bg-gray-700 p-3 rounded-lg">
+                <summary>Need a hint?</summary>
+                <div class="mt-2 text-gray-300">
+                    <p>This is a Caesar cipher. The letters are 'rotated' by a fixed amount. Try a tool to see how it works:</p>
+                    <a href="https://cryptii.com/pipes/caesar-cipher" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">cryptii</a>
+                    <br/>
+                    <a href="https://gchq.github.io/CyberChef/#recipe=ROT13_Brute_Force(true,true,false,100,0,true,'')" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Cyberchef</a>
+                </div>
+            </details>
+
+            <div>
+                <label for="stage1-input" class="block text-sm font-medium text-gray-300 mb-1">Your Answer:</label>
+                <input type="text" id="stage1-input" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Type your answer here!">
+            </div>
+            <button onclick="checkStage1()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300">Submit</button>
+            <p id="feedback-1" class="text-center h-4 mt-2"></p>
+        </section>
+
+        <!-- Stage 2: Hex to Binary -->
+        <section id="stage-2" class="space-y-4 p-6 bg-gray-800 rounded-lg border border-gray-700" style="display: none;">
+            <h2 class="text-2xl font-semibold">Stage 2: Hex and Bin</h2>
+            <p class="text-gray-300">Not bad! However, our computers do not understand words like us and operate on 0 and 1s (<a href="https://en.wikipedia.org/wiki/Binary_number" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">binary</a>). To make reading binary easier, we typically write binary in <a href="https://en.wikipedia.org/wiki/Hexadecimal" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">hexadecimal</a>. As practice, can you help convert the following hexadecimal code to binary?</p>
+            
+            <pre class="bg-gray-900 p-4 rounded-lg text-center text-lg font-mono text-yellow-300">C0FFE3151337</pre>
+            
+            <details class="bg-gray-700 p-3 rounded-lg">
+                <summary>Need a hint?</summary>
+                <div class="mt-2 text-gray-300 font-mono text-sm">
+                    <p>The conversion table is somewhere in the wikipedia links provided!</p>
+                    <p>Feel free to include spaces if it helps!</p>
+                </div>
+            </details>
+
+            <div>
+                <label for="stage2-input" class="block text-sm font-medium text-gray-300 mb-1">Your Answer (16 bits):</label>
+                <input type="text" id="stage2-input" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 1010101011111111">
+            </div>
+            <button onclick="checkStage2()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300">Submit</button>
+            <p id="feedback-2" class="text-center h-4 mt-2"></p>
+        </section>
+
+        <!-- Stage 3: XOR intro -->
+        <section id="stage-3" class="space-y-4 p-6 bg-gray-800 rounded-lg border border-gray-700" style="display: none;">
+            <h2 class="text-2xl font-semibold">Stage 3: The Exclusive OR</h2>
+            <p class="text-gray-300">Wonderful! Now lets move on to bitwise operations. The most important operation for cryptography is the <a href="https://en.wikipedia.org/wiki/Exclusive_or" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">exclusive or (XOR)</a>. When writing code, you can typically use ^ to denote the XOR operation. Let's do a quick sanity check if you're able to compute the exclusive or!</p>
+            
+            <div class="bg-gray-900 p-4 rounded-lg font-mono text-lg">
+                <p><span class="text-gray-400">A:&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="text-yellow-300">11010010</span></p>
+                <p><span class="text-gray-400">B:&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="text-yellow-300">00111001</span></p>
+                <p><span class="text-gray-400">A ^ B:</span> <span class="text-yellow-300">????????</span></p>
+            </div>
+            
+            <details class="bg-gray-700 p-3 rounded-lg">
+                <summary>Need a hint?</summary>
+                <div class="mt-2 text-gray-300">
+                    <p class="mb-2">XOR is done bit-by-bit, so you can apply the XOR logic to every bit.</p>
+                    <ul class="list-disc list-inside font-mono text-sm">
+                        <li>0 ^ 0 = 0</li>
+                        <li>0 ^ 1 = 1</li>
+                        <li>1 ^ 0 = 1</li>
+                        <li>1 ^ 1 = 0</li>
+                    </ul>
+                </div>
+            </details>
+
+            <div>
+                <label for="stage3-input" class="block text-sm font-medium text-gray-300 mb-1">Your Answer:</label>
+                <input type="text" id="stage3-input" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. 01010101">
+            </div>
+            <button onclick="checkStage3()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300">Submit</button>
+            <p id="feedback-3" class="text-center h-4 mt-2"></p>
+        </section>
+
+        <!-- Stage 4: XOR invertibility -->
+        <section id="stage-4" class="space-y-4 p-6 bg-gray-800 rounded-lg border border-gray-700" style="display: none;">
+            <h2 class="text-2xl font-semibold">Stage 4: Invert the operation</h2>
+            <p class="text-gray-300">One magic property about xor is that it is invertible! Can you recover A given B and A^B? Note that we are providing the values in hexadecimal, and your answer should be in hexadecimal too</p>
+
+            <div class="bg-gray-900 p-4 rounded-lg font-mono text-xs md:text-sm break-all">
+                <p><span class="text-gray-400">A:&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="text-yellow-300">????????</span></p>
+                <p><span class="text-gray-400">B:&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="text-yellow-300">1a2b3c4d</span></p>
+                <p><span class="text-gray-400">A ^ B:</span> <span class="text-yellow-300">d0d586f3<span></p>
+            </div>
+            
+            <details class="bg-gray-700 p-3 rounded-lg">
+                <summary>Need a hint?</summary>
+                <div class="mt-2 text-gray-300">
+                    <p class="mb-2">You may want to convert the hex to bin first, or perhaps find a online tool or write your own code to do so!</p>
+                    <p class="mb-2">Look closely at the XOR table, and notice that because something XORed itself is zero (A^A=0), to solve ?^B=C, we can XOR both sides with B to get ?=?^B^B=C^B!</p>
+                    <ul class="list-disc list-inside font-mono text-sm">
+                        <li>0 ^ 0 = 0</li>
+                        <li>0 ^ 1 = 1</li>
+                        <li>1 ^ 0 = 1</li>
+                        <li>1 ^ 1 = 0</li>
+                    </ul>
+                </div>
+            </details>
+            
+            <div>
+                <label for="stage4-input" class="block text-sm font-medium text-gray-300 mb-1">Your Answer:</label>
+                <input type="text" id="stage4-input" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g. a0b1c2d3">
+            </div>
+            <button onclick="checkStage4()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300">Submit</button>
+            <p id="feedback-4" class="text-center h-4 mt-2"></p>
+        </section>
+
+        <!-- Stage 5: Cyclic XOR and ascii -->
+        <section id="stage-5" class="space-y-4 p-6 bg-gray-800 rounded-lg border border-gray-700" style="display: none;">
+            <h2 class="text-2xl font-semibold">Stage 5: Get the flag</h2>
+            <p class="text-gray-300">Congratulations! Decode the following text and you can get your flag!</p> 
+            <p class="text-gray-300">Here is the key I generated from your previous answers. Using this key, decode the following hex code using XOR and convert it to plaintext.</p>
+
+            <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm md:text-base">
+                <p><span class="text-gray-400">Key: </span> <span id="final-key" class="text-yellow-300"></span></p>
+                <p class="mt-2"><span class="text-gray-400">Ciphertext (hex):</span></p>
+                <p><span class="text-yellow-300">c0739fd18459756ab477c83480d1d7a2</span></p><p><span class="text-yellow-300">d74ea8d8b2437d6ae270c2348089d7a2</span></p><p><span class="text-yellow-300">d702f4e9fa0c67</span></p>
+            </div>
+
+            <details class="bg-gray-700 p-3 rounded-lg">
+                <summary>Need a hint?</summary>
+                <div class="mt-2 text-gray-300">
+                    <p class="mb-2">Since the key is too short, repeat it to make a longer key.</p>
+                    <p class="mb-2">The flag should be in normal text, so you will have to convert binary/hex into text. Typically computers store text using <a href="https://en.wikipedia.org/wiki/ASCII" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">ASCII</a>! For example, the binary 01001010 (4a in hex), when encoded in ASCII, is the letter J</p>
+                </div>
+            </details>
+        </section>
+    </main>
+
+    <script>
+        // --- Helper Function ---
+        let all_answers= ["", "", "", ""];
+
+        function showFeedback(id, message, isError) {
+            const feedbackEl = document.getElementById(id);
+            feedbackEl.textContent = message;
+            feedbackEl.className = isError ? 'text-center h-4 mt-2 text-red-400' : 'text-center h-4 mt-2 text-green-400';
+        }
+
+        function unlockStage(nextStageId, feedbackId) {
+            showFeedback(feedbackId, 'Correct!', false);
+            document.getElementById(nextStageId).style.display = 'block';
+            document.getElementById(nextStageId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Stage 1 Check ---
+        function checkStage1() {
+            const answer = document.getElementById('stage1-input').value.trim();
+            const correctHash = 'df4d121dc9edbac58d9f5672b2346972'
+            
+            if (md5(answer) === correctHash) {
+                all_answers[0] = answer;
+                unlockStage('stage-2', 'feedback-1');
+                document.getElementById('stage1-input').disabled = true;
+                this.disabled = true;
+            } else {
+                showFeedback('feedback-1', 'Not quite. Make sure that the output is valid english!', true);
+            }
+        }
+
+        // --- Stage 2 Check ---
+        function checkStage2() {
+            const answer = document.getElementById('stage2-input').value.replace(/\s/g, '');
+            const correctHash = '1992225d3e435bf3127655a3a6cce3a0';
+
+            if (md5(answer) === correctHash) {
+                all_answers[1] = answer;
+                unlockStage('stage-3', 'feedback-2');
+                document.getElementById('stage2-input').disabled = true;
+                this.disabled = true;
+            } else {
+                showFeedback('feedback-2', 'Double check your hex to bin conversion.', true);
+            }
+        }
+
+        // --- Stage 3 Check ---
+        function checkStage3() {
+            const answer = document.getElementById('stage3-input').value.replace(/\s/g, '');
+            const correctHash = 'c97a378a60c8587649bb6751592adbbf';
+            
+            if (md5(answer) === correctHash) {
+                all_answers[2] = answer;
+                unlockStage('stage-4', 'feedback-3');
+                document.getElementById('stage3-input').disabled = true;
+                this.disabled = true;
+            } else {
+                showFeedback('feedback-3', 'That\'s not quite right unfortunately', true);
+            }
+        }
+
+        // --- Stage 4 Check ---
+        function checkStage4() {
+            const answer = document.getElementById('stage4-input').value.replace(/\s/g, '').toLowerCase();
+            const correctHash = '21a270d5f59c9b05813a72bb41707266';
+
+            if (md5(answer) === correctHash) {
+                all_answers[3] = answer;
+                document.getElementById('stage4-input').disabled = true;
+                if (md5(all_answers.join(":::")) === "2006827ea637b1fd7dd1562581850e74"){
+                    unlockStage('stage-5', 'feedback-4');
+                    const key = md5(all_answers.join(", "));
+                    document.getElementById('final-key').textContent = key;
+                }else{
+                    showFeedback('feedback-4', 'You got the correct answer, but we are unable to unlock the last level. Please contact an admin because something went wrong in the challenge', true);
+                }
+                this.disabled = true;
+            } else {
+                showFeedback('feedback-4', 'Incorrect. Check your hex math or your conversion.', true);
+            }
+        }
+
+        // MD5
+        var md5 = function(d){var r = M(V(Y(X(d),8*d.length)));return r.toLowerCase()};function M(d){for(var _,m="0123456789ABCDEF",f="",r=0;r<d.length;r++)_=d.charCodeAt(r),f+=m.charAt(_>>>4&15)+m.charAt(15&_);return f}function X(d){for(var _=Array(d.length>>2),m=0;m<_.length;m++)_[m]=0;for(m=0;m<8*d.length;m+=8)_[m>>5]|=(255&d.charCodeAt(m/8))<<m%32;return _}function V(d){for(var _="",m=0;m<32*d.length;m+=8)_+=String.fromCharCode(d[m>>5]>>>m%32&255);return _}function Y(d,_){d[_>>5]|=128<<_%32,d[14+(_+64>>>9<<4)]=_;for(var m=1732584193,f=-271733879,r=-1732584194,i=271733878,n=0;n<d.length;n+=16){var h=m,t=f,g=r,e=i;f=md5_ii(f=md5_ii(f=md5_ii(f=md5_ii(f=md5_hh(f=md5_hh(f=md5_hh(f=md5_hh(f=md5_gg(f=md5_gg(f=md5_gg(f=md5_gg(f=md5_ff(f=md5_ff(f=md5_ff(f=md5_ff(f,r=md5_ff(r,i=md5_ff(i,m=md5_ff(m,f,r,i,d[n+0],7,-680876936),f,r,d[n+1],12,-389564586),m,f,d[n+2],17,606105819),i,m,d[n+3],22,-1044525330),r=md5_ff(r,i=md5_ff(i,m=md5_ff(m,f,r,i,d[n+4],7,-176418897),f,r,d[n+5],12,1200080426),m,f,d[n+6],17,-1473231341),i,m,d[n+7],22,-45705983),r=md5_ff(r,i=md5_ff(i,m=md5_ff(m,f,r,i,d[n+8],7,1770035416),f,r,d[n+9],12,-1958414417),m,f,d[n+10],17,-42063),i,m,d[n+11],22,-1990404162),r=md5_ff(r,i=md5_ff(i,m=md5_ff(m,f,r,i,d[n+12],7,1804603682),f,r,d[n+13],12,-40341101),m,f,d[n+14],17,-1502002290),i,m,d[n+15],22,1236535329),r=md5_gg(r,i=md5_gg(i,m=md5_gg(m,f,r,i,d[n+1],5,-165796510),f,r,d[n+6],9,-1069501632),m,f,d[n+11],14,643717713),i,m,d[n+0],20,-373897302),r=md5_gg(r,i=md5_gg(i,m=md5_gg(m,f,r,i,d[n+5],5,-701558691),f,r,d[n+10],9,38016083),m,f,d[n+15],14,-660478335),i,m,d[n+4],20,-405537848),r=md5_gg(r,i=md5_gg(i,m=md5_gg(m,f,r,i,d[n+9],5,568446438),f,r,d[n+14],9,-1019803690),m,f,d[n+3],14,-187363961),i,m,d[n+8],20,1163531501),r=md5_gg(r,i=md5_gg(i,m=md5_gg(m,f,r,i,d[n+13],5,-1444681467),f,r,d[n+2],9,-51403784),m,f,d[n+7],14,1735328473),i,m,d[n+12],20,-1926607734),r=md5_hh(r,i=md5_hh(i,m=md5_hh(m,f,r,i,d[n+5],4,-378558),f,r,d[n+8],11,-2022574463),m,f,d[n+11],16,1839030562),i,m,d[n+14],23,-35309556),r=md5_hh(r,i=md5_hh(i,m=md5_hh(m,f,r,i,d[n+1],4,-1530992060),f,r,d[n+4],11,1272893353),m,f,d[n+7],16,-155497632),i,m,d[n+10],23,-1094730640),r=md5_hh(r,i=md5_hh(i,m=md5_hh(m,f,r,i,d[n+13],4,681279174),f,r,d[n+0],11,-358537222),m,f,d[n+3],16,-722521979),i,m,d[n+6],23,76029189),r=md5_hh(r,i=md5_hh(i,m=md5_hh(m,f,r,i,d[n+9],4,-640364487),f,r,d[n+12],11,-421815835),m,f,d[n+15],16,530742520),i,m,d[n+2],23,-995338651),r=md5_ii(r,i=md5_ii(i,m=md5_ii(m,f,r,i,d[n+0],6,-198630844),f,r,d[n+7],10,1126891415),m,f,d[n+14],15,-1416354905),i,m,d[n+5],21,-57434055),r=md5_ii(r,i=md5_ii(i,m=md5_ii(m,f,r,i,d[n+12],6,1700485571),f,r,d[n+3],10,-1894986606),m,f,d[n+10],15,-1051523),i,m,d[n+1],21,-2054922799),r=md5_ii(r,i=md5_ii(i,m=md5_ii(m,f,r,i,d[n+8],6,1873313359),f,r,d[n+15],10,-30611744),m,f,d[n+6],15,-1560198380),i,m,d[n+13],21,1309151649),r=md5_ii(r,i=md5_ii(i,m=md5_ii(m,f,r,i,d[n+4],6,-145523070),f,r,d[n+11],10,-1120210379),m,f,d[n+2],15,718787259),i,m,d[n+9],21,-343485551),m=safe_add(m,h),f=safe_add(f,t),r=safe_add(r,g),i=safe_add(i,e)}return Array(m,f,r,i)}function md5_cmn(d,_,m,f,r,i){return safe_add(bit_rol(safe_add(safe_add(_,d),safe_add(f,i)),r),m)}function md5_ff(d,_,m,f,r,i,n){return md5_cmn(_&m|~_&f,d,_,r,i,n)}function md5_gg(d,_,m,f,r,i,n){return md5_cmn(_&f|m&~f,d,_,r,i,n)}function md5_hh(d,_,m,f,r,i,n){return md5_cmn(_^m^f,d,_,r,i,n)}function md5_ii(d,_,m,f,r,i,n){return md5_cmn(m^(_|~f),d,_,r,i,n)}function safe_add(d,_){var m=(65535&d)+(65535&_);return(d>>16)+(_>>16)+(m>>16)<<16|65535&m}function bit_rol(d,_){return d<<_|d>>>32-_}
+    </script>
+
+</body>
+</html>

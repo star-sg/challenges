@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa's Wishlist 🎅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 50px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Snowflakes animation */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 9999;
+            user-select: none;
+            cursor: default;
+            animation-name: snowfall;
+            animation-duration: 10s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ffd700; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #ffd700, 0 0 40px #ffd700; }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        form {
+            margin: 30px 0;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        textarea {
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+
+        button {
+            background: linear-gradient(135deg, #d4001a 0%, #ff0000 100%);
+            color: white;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 0, 26, 0.4);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #a80015 0%, #d4001a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 0, 26, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            display: none;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+
+        .result pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .examples {
+            text-align: left;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            font-size: 0.95em;
+            border-left: 4px solid #ffd700;
+        }
+
+        .examples strong {
+            color: #ffd700;
+            font-size: 1.1em;
+        }
+
+        .examples em {
+            color: #ffeb3b;
+            display: block;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .hint {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px dashed rgba(255, 215, 0, 0.5);
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <!-- Snowflakes -->
+    <div class="snowflake" style="left: 10%; animation-duration: 8s;">❄</div>
+    <div class="snowflake" style="left: 20%; animation-duration: 12s; animation-delay: 2s;">❅</div>
+    <div class="snowflake" style="left: 30%; animation-duration: 10s; animation-delay: 1s;">❄</div>
+    <div class="snowflake" style="left: 40%; animation-duration: 14s;">❆</div>
+    <div class="snowflake" style="left: 50%; animation-duration: 9s; animation-delay: 3s;">❄</div>
+    <div class="snowflake" style="left: 60%; animation-duration: 11s;">❅</div>
+    <div class="snowflake" style="left: 70%; animation-duration: 13s; animation-delay: 1.5s;">❄</div>
+    <div class="snowflake" style="left: 80%; animation-duration: 10s; animation-delay: 0.5s;">❆</div>
+    <div class="snowflake" style="left: 90%; animation-duration: 12s; animation-delay: 2.5s;">❄</div>
+
+    <div class="container">
+        <h1>🎄 Santa's Wishlist 🎄</h1>
+        <p class="subtitle">Make your Christmas wish and let Santa's magic template engine process it!</p>
+        
+        <form id="wishForm">
+            <label for="name">👤 Your Name:</label>
+            <input type="text" id="name" placeholder="Enter your name" required>
+            
+            <label for="wish">🎁 Your Christmas Wish:</label>
+            <textarea id="wish" rows="3" placeholder="What would you like for Christmas?" required></textarea>
+            
+            <label for="template">✨ Custom Template (optional):</label>
+            <textarea id="template" rows="6" placeholder="Try our template syntax or leave default...">Dear {{santa}}, my name is {{name}} and I wish for {{wish}}! {{tree}}{{gift}}</textarea>
+            
+            <button type="submit">✉️ Send Wish to Santa 🎅</button>
+        </form>
+
+        <div class="examples">
+            <strong>📝 Try these template expressions:</strong><br><br>
+            • <code>{{santa}}</code> <code>{{tree}}</code> <code>{{gift}}</code> <code>{{snowman}}</code> <code>{{star}}</code> - Christmas emojis<br>
+            • <code>{{name.upper}}</code> - Transform to uppercase<br>
+            • <code>{{name.reverse}}</code> - Reverse text<br>
+            • <code>{{wish.len}}</code> - Count characters<br>
+            
+            <div class="hint">
+                <em>🔍 Hint: Santa's workshop has some powerful template features for the elves... 
+                Legend says there's a special syntax related to where Santa lives. The senior elves 
+                use advanced expressions, but Santa's security team tries to block dangerous keywords. 🎅✨</em>
+            </div>
+        </div>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('wishForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const wish = document.getElementById('wish').value;
+            const template = document.getElementById('template').value;
+
+            try {
+                const response = await fetch('/wish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        name, 
+                        wish, 
+                        template: template || null 
+                    })
+                });
+
+                const data = await response.json();
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <strong>🎉 ${data.message}</strong>
+                    <pre>${escapeHtml(data.rendered)}</pre>
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (error) {
+                alert('❌ Error sending wish: ' + error.message);
+            }
+        });
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
